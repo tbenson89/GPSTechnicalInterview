@@ -1,0 +1,62 @@
+.application-details {
+  position: relative;
+  padding: 2rem 4rem;
+  overflow: auto;
+  max-height: calc(100vh - 56px);
+
+  @media only screen and (max-width: 800px) {
+    max-height: calc(100vh - 104px);
+  }
+
+  .section-details {
+    padding: 0;
+    margin-bottom: 1rem;
+
+    .short-header-line {
+      margin: 1rem 0 .5rem;
+    }
+
+    .section-details-title {
+      font-size: 16px;
+      padding: 1rem 0 0 1rem;
+    }
+
+    .section-details-body {
+      padding: 1rem;
+
+      .input-wrap-row {
+        display: flex;
+
+        .input-wrap {
+          width: 100%;
+          display: flex;
+          .input-wrap__input {
+            flex-grow: 1;
+          }
+        }
+
+        .input-wrap:first-child {
+          margin-right: 15px;
+        }
+        #lastInput {
+          margin-right: 0;
+        }
+      }
+
+      .input-wrap-checkbox {
+        padding-top: .5rem;
+        
+        .product-checkbox {
+          padding-right: 15px;
+        }
+      }
+    }
+
+    .details-buttons {
+      display: flex;
+      justify-content: flex-end;
+      padding: 1rem;
+
+    }
+  }
+}

@@ -1,0 +1,129 @@
+.container {
+  width: 100%;
+  margin-top: 2rem;
+  border: 1px solid rgba(black, 0.12);
+  border-radius: 4px;
+  background-color: white;
+  padding-left: 0;
+  padding-right: 0;
+
+  .search-header {
+    display: flex;
+    background-color: white;
+    flex-direction: row;
+    margin: 10px 0;
+    justify-content: space-between;
+    align-content: space-between;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    padding: 0 1rem;
+
+    h5 {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0;
+    }
+
+    .search-container {
+      display: flex;
+      flex-direction: row;
+
+      .search-input-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid rgba(black, 0.12);
+        border-radius: 4px;
+        max-height: 50px;
+
+        .search-icon {
+          flex-shrink: 0;
+          margin: 8px;
+        }
+
+        .search-input {
+          flex-grow: 1;
+          min-width: 0;
+          padding: 5px;
+          border: none;
+          background: none;
+
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+
+    th {
+      overflow: hidden;
+      text-transform: capitalize;
+    }
+
+    td,
+    th {
+      height: 40px;
+      padding-top: 12px;
+      padding-bottom: 5px;
+    }
+
+    td.small,
+    th.small {
+      max-width: 40px;
+    }
+
+    tr.table-row.clickable,
+    td.clickable,
+    th.clickable {
+      cursor: pointer;
+    }
+
+    tr.table-row:not(.expanded-row):hover,
+    tr.table-row:not(.expanded-row):active {
+      background: #FAFAFA;
+    }
+
+    tr.mat-header-row {
+      height: 40px;
+      border-top: 1px solid rgba(black, 0.12);
+    }
+
+    .mat-header-cell {
+      color: rgba(0, 0, 0, .55);
+      font-weight: 500;
+    }
+
+    td.table-row {
+      border-bottom-width: 0;
+    }
+
+    th.mat-header-cell:first-of-type {
+        padding-left: 1rem;
+    }
+  }
+}
+.add-btn-container {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  margin: 20px;
+  padding: 20px;
+
+  .add-btn {
+    background-color: #263238;
+  }
+}
+.mat-menu-item:hover {
+  color: #fff;
+  background-color: #263238;
+}
+.mat-menu-content {
+  padding-top: 0;
+  padding-bottom: 0 !important;
+}
