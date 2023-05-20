@@ -1,0 +1,56 @@
+[
+  {
+    "applicationNumber": "000000-0001",
+    "loanTerms": {
+      "amount": 123.20,
+      "monthlyPaymentAmount": 2.50,
+      "term": 60
+    },
+    "personalInfo": {
+      "fullName": {
+        "firstName": "John",
+        "lastName": "Doe"
+      },
+      "phoneNumber": "1234567890",
+      "email": "johndoe@example.com"
+    },
+    "dateApplied": "2023-05-18T12:17:44.8240898-06:00",
+    "status": "New"
+  },
+  {
+    "applicationNumber": "000000-0002",
+    "loanTerms": {
+      "amount": 1230.20,
+      "monthlyPaymentAmount": 2.50,
+      "term": 72
+    },
+    "personalInfo": {
+      "fullName": {
+        "firstName": "Jane",
+        "lastName": "Doe"
+      },
+      "phoneNumber": "1234567890",
+      "email": "janedoe@example.com"
+    },
+    "dateApplied": "2023-05-18T12:17:44.8240954-06:00",
+    "status": "Approved"
+  },
+  {
+    "applicationNumber": "000000-0003",
+    "loanTerms": {
+      "amount": 12030.20,
+      "monthlyPaymentAmount": 2.50,
+      "term": 84
+    },
+    "personalInfo": {
+      "fullName": {
+        "firstName": "Joe",
+        "lastName": "Doe"
+      },
+      "phoneNumber": "1234567890",
+      "email": "joedoe@example.com"
+    },
+    "dateApplied": "2023-05-18T12:17:44.8240959-06:00",
+    "status": "Funded"
+  }
+]

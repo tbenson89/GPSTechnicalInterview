@@ -13,31 +13,58 @@
     </div>
     <ng-container>
       <ng-container>
-        <table mat-table>
+        <table mat-table [dataSource]="applications">
           <ng-container matColumnDef="applicationNumber">
             <th mat-header-cell *matHeaderCellDef>Application Number</th>
+            <td mat-cell *matCellDef="let application">{{ application.applicationNumber }}</td>
           </ng-container>
           <ng-container matColumnDef="amount">
             <th mat-header-cell *matHeaderCellDef>Amount</th>
+            <td mat-cell *matCellDef="let application">{{ application.loanTerms.amount | currency }}</td>
           </ng-container>
           <ng-container matColumnDef="dateApplied">
             <th mat-header-cell *matHeaderCellDef>Date Applied</th>
+            <td mat-cell *matCellDef="let application">{{ application.dateApplied | date:'shortDate' }}</td>
           </ng-container>
           <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let application">{{ application.status }}</td>
           </ng-container>
-          <tr class="table-header" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <ng-container matColumnDef="options">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let application">
+              <button mat-icon-button [matMenuTriggerFor]="options">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #options="matMenu" xPosition="before">
+                <button mat-menu-item (click)="editClick(application)">Edit</button>
+                <button mat-menu-item (click)="deleteClick(application.applicationNumber)">Delete</button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns" class="table-row"></tr>
         </table>
       </ng-container>
+      <ng-container *ngIf="!applications.length">
+        <mat-card class="empty-card text-center">
+          <mat-card-content>
+            <mat-card-title>There are no applications to display</mat-card-title>
+            <p>Add a new application using the button below.</p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button class="btn-success" [routerLink]="['/create-application']">Start Application</button>
+          </mat-card-actions>
+        </mat-card>
+      </ng-container>
     </ng-container>
-  </div>
-  <div class="add-btn-container">
-    <button mat-fab class="add-btn" [routerLink]="['/create-application']"
-            matTooltip="Add new application" matTooltipPosition="right" aria-label="Button that adds a new application.">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M14 8H8V14H6V8H0V6H6V0H8V6H14V8Z" fill="white" />
-      </svg>
-    </button>
-  </div>
-  
+</div>
+<div class="add-btn-container">
+  <button mat-fab class="add-btn" [routerLink]="['/create-application']"
+          matTooltip="Add new application" matTooltipPosition="right" aria-label="Button that adds a new application.">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 8H8V14H6V8H0V6H6V0H8V6H14V8Z" fill="white" />
+    </svg>
+  </button>
+</div>

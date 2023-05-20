@@ -3,19 +3,25 @@
   <mat-card class="section-details">
     <mat-card-title class="section-details-title">Personal Information</mat-card-title>
     <form [formGroup]="applicationForm">
-      <section class="section-details-body">
+      <section class="section-details-body" formGroupName="personalInfo">
         <div class="input-wrap-row">
-          <div class="input-wrap">
+          <div class="input-wrap" formGroupName="fullName">
             <mat-form-field appearance="outline" class="input-wrap__input">
-              <mat-label>First Name *</mat-label>
-              <input matInput formControlName="firstName" placeholder="First Name *">
+              <mat-label>First Name</mat-label>
+              <input matInput formControlName="firstName" placeholder="First Name" required>
             </mat-form-field>
+            <div class="error-message" *ngIf="isFieldInvalid('personalInfo.fullName.firstName')">
+              <em>{{ getErrorMessage('personalInfo.fullName.firstName') }}</em>
+            </div>
           </div>
-          <div class="input-wrap">
+          <div class="input-wrap" formGroupName="fullName">
             <mat-form-field appearance="outline" class="input-wrap__input">
-              <mat-label>Last Name *</mat-label>
+              <mat-label>Last Name</mat-label>
               <input matInput formControlName="lastName" placeholder="Last Name *">
             </mat-form-field>
+            <div class="error-message" *ngIf="isFieldInvalid('personalInfo.fullName.lastName')">
+              <em>{{ getErrorMessage('personalInfo.fullName.lastName') }}</em>
+            </div>
           </div>
         </div>
         <div class="input-wrap-row">
@@ -24,12 +30,18 @@
               <mat-label>Phone Number</mat-label>
               <input matInput formControlName="phoneNumber" placeholder="Phone Number">
             </mat-form-field>
+            <div class="error-message" *ngIf="isFieldInvalid('personalInfo.phoneNumber')">
+              <em>{{ getErrorMessage('personalInfo.phoneNumber') }}</em>
+            </div>
           </div>
           <div class="input-wrap">
             <mat-form-field appearance="outline" class="input-wrap__input">
               <mat-label>Email</mat-label>
               <input matInput formControlName="email" placeholder="Email">
             </mat-form-field>
+            <div class="error-message" *ngIf="isFieldInvalid('personalInfo.email')">
+              <em>{{ getErrorMessage('personalInfo.email') }}</em>
+            </div>
           </div>
         </div>
       </section>
@@ -39,9 +51,12 @@
         <div class="input-wrap-row">
           <div class="input-wrap">
             <mat-form-field appearance="outline" class="input-wrap__input">
-              <mat-label>Application Number *</mat-label>
-              <input matInput formControlName="applicationNumber" placeholder="Application Number *">
+              <mat-label>Application Number</mat-label>
+              <input matInput formControlName="applicationNumber" placeholder="Application Number *" [readonly]="this.mode === 'EDIT'">
             </mat-form-field>
+            <div class="error-message" *ngIf="isFieldInvalid('applicationNumber')">
+              <em>{{ getErrorMessage('applicationNumber') }}</em>
+            </div>
           </div>
           <div class="input-wrap">
             <mat-form-field appearance="outline" class="input-wrap__input">
@@ -52,33 +67,40 @@
               </mat-form-field>
           </div>
         </div>
-        <div class="input-wrap-row">
+        <div class="input-wrap-row" formGroupName="loanTerms">
           <div class="input-wrap">
             <mat-form-field appearance="outline" class="input-wrap__input">
-              <mat-label>Amount *</mat-label>
-              <input matInput formControlName="amount" placeholder="Amount *">
+              <mat-label>Amount</mat-label>
+              <input matInput formControlName="amount" placeholder="Amount *" (input)="updateMonthlyPaymentAmount()">
             </mat-form-field>
+            <div class="error-message" *ngIf="isFieldInvalid('loanTerms.amount')">
+              <em>{{ getErrorMessage('loanTerms.amount') }}</em>
+            </div>
           </div>
           <div class="input-wrap">
             <mat-form-field appearance="outline" class="input-wrap__input">
               <mat-label>Monthly Payment Amount</mat-label>
-              <input matInput formControlName="monthlyPayAmount" placeholder="Monthly Payment Amount">
+              <input matInput formControlName="monthlyPaymentAmount" placeholder="Monthly Payment Amount" readonly>
             </mat-form-field>
           </div>
         </div>
-        <div class="input-wrap-row">
+        <div class="input-wrap-row" formGroupName="loanTerms">
           <div class="input-wrap" id="lastInput">
             <mat-form-field appearance="outline" class="input-wrap__input">
-              <mat-label>Terms *</mat-label>
-              <input matInput formControlName="terms" placeholder="Terms *">
+              <mat-label>Terms</mat-label>
+              <input matInput formControlName="term" placeholder="Terms *" (input)="updateMonthlyPaymentAmount()">
             </mat-form-field>
+            <div class="error-message" *ngIf="isFieldInvalid('loanTerms.term')">
+              <em>{{ getErrorMessage('loanTerms.term') }}</em>
+            </div>
           </div>
         </div>
       </section>
       <hr />
     </form>
     <mat-card-actions class="details-buttons">
-      <button mat-button color="primary">SAVE</button>
+      <button mat-button color="primary" (click)="submitApplication()">{{ mode === 'CREATE' ? 'CREATE' : 'UPDATE' }}</button>
+      <button mat-button color="warn" *ngIf="mode !== 'CREATE'" [routerLink]="['/']">CANCEL</button>
     </mat-card-actions>
 </mat-card>
 </section>

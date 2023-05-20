@@ -1,13 +1,67 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../api.service';
+import { LoanApplication } from '../models/loan-application.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { UserModalComponent } from '../components/user-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-applications',
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.scss']
 })
-export class ApplicationsComponent {
+export class ApplicationsComponent implements OnInit {
+  public displayedColumns: Array<string> = [
+    "applicationNumber",
+    "amount",
+    "dateApplied",
+    "status",
+    "options",
+  ];
+  public applications: LoanApplication[] = [];
 
-  public displayedColumns: Array<string> = ['applicationNumber', 'amount', 'dateApplied', 'status']; 
+  constructor(
+    private service: ApiService,
+    private _snackBar: MatSnackBar,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
-  constructor() { }
+  ngOnInit(): void {
+    this.displayApplications();
+  }
+
+  displayApplications() {
+    this.service.getAllApplications().subscribe((data: LoanApplication[]) => {
+      this.applications = data;
+    });
+  }
+
+  editClick(application: LoanApplication) {
+    // Pass the application data to the edit route using NavigationBehaviorOptions.state
+    this.router.navigate(["/edit-application"], { state: { application } });
+  }
+
+  deleteClick(appNum: string) {
+    const dialogRef = this.dialog.open(UserModalComponent, {
+      width: "35vw",
+      data: { appNum },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.service
+          .deleteApplication(appNum)
+          .subscribe((data: LoanApplication[]) => {
+            this.openSnackBar("Application Deleted.", "OK");
+            this.applications = data;
+          });
+      }
+    });
+  }
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, { duration: 3000 });
+  }
 }

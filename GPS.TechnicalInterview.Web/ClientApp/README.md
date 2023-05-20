@@ -1,18 +1,18 @@
-# GPS.ApplicationManager.Web
+<div align="center">
+    <img src="https://media.licdn.com/dms/image/C560BAQFuy2xtl26-hw/company-logo_200_200/0/1523975442115?e=2147483647&v=beta&t=Ob1jE3IalefYavenAcPliORBG_NukB7PlohQp5VKGBQ"/>
+</div>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.0.
+# GPS.ApplicationManager.Web Tyler's Interview Test
 
-## Development server
+This project is a loan application tool built with .NET, Angular and Material. The user interface features a custom design that is visually appealing and user-friendly. Users can create, edit, and delete applications.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Sample Data
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Copy sample data from `/loanApplication_Sample.json` to `/loanApplication.json` (if you want to start with sample data or you can start by the default seed data)
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ## Running unit tests
 
@@ -20,8 +20,4 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.

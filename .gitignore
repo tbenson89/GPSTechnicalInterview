@@ -1,0 +1,6 @@
+GPS.TechnicalInterview.Web/.vs
+GPS.TechnicalInterview.Web/bin
+GPS.TechnicalInterview.Web/obj
+GPS.TechnicalInterview.Web/ClientApp/node_modules
+GPS.TechnicalInterview.Web/ClientApp/.angular/cache
+.vs
