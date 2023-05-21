@@ -106,6 +106,10 @@ export class CreateApplicationComponent implements OnInit {
     });
   }
 
+  // Note: IF I had more time: I would utilize async/await, promises, and error handling using catch().
+  // This would ensure smoother handling of the API call and potential errors.
+  // I would also utilize the async | pipe and $streams - to avoid memory leaks
+  // Eliminates the need to manually unsubscribe in the ngOnDestroy lifecycle hook
   submitApplication() {
     if (this.applicationForm.invalid) {
       this.submitted = true;

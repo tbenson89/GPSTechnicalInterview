@@ -32,6 +32,10 @@ export class ApplicationsComponent implements OnInit {
     this.displayApplications();
   }
 
+  // Note: IF I had more time: I would utilize async/await, promises, and error handling using catch().
+  // This would ensure smoother handling of the API call and potential errors.
+  // I would also utilize the async | pipe and $streams - to avoid memory leaks
+  // Eliminates the need to manually unsubscribe in the ngOnDestroy lifecycle hook
   displayApplications() {
     this.service.getAllApplications().subscribe((data: LoanApplication[]) => {
       this.applications = data;
