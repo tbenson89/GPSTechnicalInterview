@@ -1,5 +1,11 @@
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+} from "@angular/forms";
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,8 +13,7 @@ import { LoanApplication } from '../models/loan-application.model';
 
 // Note: I battled between numeric ValidatorFN and different formatting requirments
 // I ran out of time and went with the best option I had going. IF had more time
-// I would fix the currency format pipe and get it working and validate it using that
-// Custom validator function to check if the value is numeric with dashes allowed
+// I would fix the currency format pipe and get it working and validate it
 // I would love to discuss the companies coding standards in this regard
 const numericValidator: ValidatorFn = (control: FormControl) => {
   const value = control.value;
@@ -212,7 +217,7 @@ export class CreateApplicationComponent implements OnInit {
       if (control.errors?.required) {
         return '* Application Term is Required.';
       } else {
-        return '* Application Term must be a Number [24, 48, 60, 72, 84).';
+        return '* Application Term must be a Number (24, 48, 60, 72, 84).';
       }
     }
     return '* Invalid Entry';
