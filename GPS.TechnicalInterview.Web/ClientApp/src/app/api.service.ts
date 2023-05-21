@@ -10,9 +10,9 @@ export class ApiService {
     /* CRUD: Application Service API Calls */
     getAllApplications() { return this.http.get<any>(this.APIUrl+'/application'); }
 
-    createApplication(val:any) { return this.http.post(this.APIUrl+'/application', val); }
+    createApplication(val:any) { return this.http.post<any>(this.APIUrl+'/application', val); }
 
-    updateApplication(val:any) { return this.http.put(this.APIUrl+'/application', val); }
+    updateApplication(val:any) { return this.http.put<any>(this.APIUrl+'/application', val); }
 
     deleteApplication(val:any) { return this.http.delete(this.APIUrl+'/application/' + val); }
 }

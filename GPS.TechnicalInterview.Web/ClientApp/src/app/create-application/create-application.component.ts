@@ -5,11 +5,12 @@ import {
   ValidatorFn,
   Validators,
 } from "@angular/forms";
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoanApplication } from '../models/loan-application.model';
+import { Subscription } from "rxjs";
 
 // Note: I battled between numeric ValidatorFN and different formatting requirments
 // I ran out of time and went with the best option I had going. IF had more time
@@ -28,7 +29,8 @@ const numericValidator: ValidatorFn = (control: FormControl) => {
   templateUrl: './create-application.component.html',
   styleUrls: ['./create-application.component.scss']
 })
-export class CreateApplicationComponent implements OnInit {
+export class CreateApplicationComponent implements OnInit, OnDestroy {
+  private subscriptions: Subscription[] = [];
   public applicationForm: FormGroup;
   public statuses: Array<string> = ['New', 'Approved', 'Funded'];
   public mode: string; // Keep track of the viewModes/states
@@ -84,6 +86,10 @@ export class CreateApplicationComponent implements OnInit {
     }
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  }
+
   // EDIT: Populate the form fields with the application data
   populateForm(application: LoanApplication) {
     this.applicationForm.patchValue({
@@ -106,10 +112,6 @@ export class CreateApplicationComponent implements OnInit {
     });
   }
 
-  // Note: IF I had more time: I would utilize async/await, promises, and error handling using catch().
-  // This would ensure smoother handling of the API call and potential errors.
-  // I would also utilize the async | pipe and $streams - to avoid memory leaks
-  // Eliminates the need to manually unsubscribe in the ngOnDestroy lifecycle hook
   submitApplication() {
     if (this.applicationForm.invalid) {
       this.submitted = true;
@@ -137,7 +139,7 @@ export class CreateApplicationComponent implements OnInit {
     if (application && this.applicationForm.valid) {
       if (this.mode === 'CREATE') {
         // Pass the newly created Application -> API call
-        this.service.createApplication(application).subscribe(
+        const createSubscription = this.service.createApplication(application).subscribe(
           (res) => {
             this.openSnackBar("Created Succcessfully", "OK");
             this.applicationForm.reset();
@@ -149,14 +151,16 @@ export class CreateApplicationComponent implements OnInit {
             this.openSnackBar(e.error, "OK");
           }
         );
+        this.subscriptions.push(createSubscription);
       } else if (this.mode === 'EDIT') {
         // Update the application using the API call
         const updatedApplication = { ...this.currentApplication, ...application };
-        this.service.updateApplication(updatedApplication).subscribe(res => {
+        const updateSubscription = this.service.updateApplication(updatedApplication).subscribe(res => {
           this.openSnackBar('Saved Successfully', 'OK');
           this.applicationForm.reset();
           this.router.navigate(['/applications']);
         });
+        this.subscriptions.push(updateSubscription);
       } else {
           // There was an error revertback
           this.router.navigate(['/']);
@@ -164,6 +168,11 @@ export class CreateApplicationComponent implements OnInit {
     } else {
       this.errorMessage = '** Please fill out the required fields **';
     }
+
+    // Note: IF I had more time: I would utilize async/await, promises, and error handling using catch().
+    // This would ensure smoother handling of the API call and potential errors.
+    // I would also utilize the async | pipe and $streams - to avoid memory leaks
+    // Eliminates the need to manually unsubscribe in the ngOnDestroy lifecycle hook
   }
 
   updateMonthlyPaymentAmount() {
@@ -179,9 +188,10 @@ export class CreateApplicationComponent implements OnInit {
     });
   }
 
-  // Note: If i had more time I would redo this W/O the nested elseIf's X6
-  // There is a far better way to do this using switch: switch(fieldPath)
   getErrorMessage(fieldPath: string): string {
+    // Note: If i had more time I would redo this W/O the nested elseIf's X6
+    // There is a far better way to do this using switch: switch(fieldPath)
+
     if (fieldPath === 'personalInfo.fullName.firstName') {
       const control = this.applicationForm.get(fieldPath);
       if (control.errors?.required) {
