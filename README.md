@@ -9,3 +9,7 @@ This project is a loan application tool built with .NET, Angular and Material. T
 ## Sample Data
 
 Copy sample data from `/loanApplication_Sample.json` to `/loanApplication.json` (if you want to start with sample data or you can start by the default seed data)
+
+## Feedback and Support
+
+If you encounter any issues or have any suggestions for improvement, please feel free to open an issue in the repository. We value your feedback and will actively work towards addressing any concerns you may have.
