@@ -12,13 +12,13 @@ export class NavMenuComponent implements OnInit {
   public currentRoute: string = '';
 
   constructor(private router: Router) {}
-  ngOnInit(): void {
 
+  ngOnInit(): void {
     this.currentRoute = this.router.url;
     if (this.currentRoute === '/create-application') {
       this.headerTitle = 'Create Application';
     } else {
-      this.headerTitle = 'Application Manager';
+      this.headerTitle = history.state.application?.applicationNumber;
     }
   }
 }

@@ -98,6 +98,11 @@
       font-weight: 500;
     }
 
+    .mat-icon-button {
+      float: right;
+      cursor: pointer;
+    }
+
     td.table-row {
       border-bottom-width: 0;
     }
@@ -107,6 +112,7 @@
     }
   }
 }
+
 .add-btn-container {
   position: fixed;
   right: 0;
@@ -119,10 +125,12 @@
     background-color: #263238;
   }
 }
+
 .mat-menu-item:hover {
   color: #fff;
   background-color: #263238;
 }
+
 .mat-menu-content {
   padding-top: 0;
   padding-bottom: 0 !important;

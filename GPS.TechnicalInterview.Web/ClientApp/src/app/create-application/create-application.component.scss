@@ -30,22 +30,33 @@
         .input-wrap {
           width: 100%;
           display: flex;
+          flex-direction: column;
+
           .input-wrap__input {
             flex-grow: 1;
+          }
+
+          .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: -2vh;
+            margin-bottom: 2%;
+            margin-left: 2px;
           }
         }
 
         .input-wrap:first-child {
           margin-right: 15px;
         }
+
         #lastInput {
           margin-right: 0;
         }
       }
 
       .input-wrap-checkbox {
-        padding-top: .5rem;
-        
+        padding-top: 0.5rem;
+
         .product-checkbox {
           padding-right: 15px;
         }
@@ -56,7 +67,6 @@
       display: flex;
       justify-content: flex-end;
       padding: 1rem;
-
     }
   }
 }
