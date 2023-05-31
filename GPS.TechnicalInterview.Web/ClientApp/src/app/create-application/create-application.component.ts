@@ -10,9 +10,10 @@ import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoanApplication } from '../models/loan-application.model';
-import { Subscription } from "rxjs";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
 
-// Note: I battled between numeric ValidatorFN and different formatting requirments
+// Note: I battled between numeric ValidatorFN and different formatting requirements
 // I ran out of time and went with the best option I had going. IF had more time
 // I would fix the currency format pipe and get it working and validate it
 // I would love to discuss the companies coding standards in this regard
@@ -30,7 +31,7 @@ const numericValidator: ValidatorFn = (control: FormControl) => {
   styleUrls: ['./create-application.component.scss']
 })
 export class CreateApplicationComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
+  private unsubscribe$ = new Subject<void>();
   public applicationForm: FormGroup;
   public statuses: Array<string> = ['New', 'Approved', 'Funded'];
   public mode: string; // Keep track of the viewModes/states
@@ -38,11 +39,12 @@ export class CreateApplicationComponent implements OnInit, OnDestroy {
   public errorMessage: string = '';
   public submitted: boolean;
 
+  // TODO: get or remove currency format hmmm
   constructor(
     private formBuilder: FormBuilder,
     private service: ApiService,
     private router: Router,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
   ) {
     this.applicationForm = this.formBuilder.group({
       applicationNumber: new FormControl('', [Validators.required, numericValidator]),
@@ -84,10 +86,6 @@ export class CreateApplicationComponent implements OnInit, OnDestroy {
 
       this.populateForm(stateData.application);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
   // EDIT: Populate the form fields with the application data
@@ -139,7 +137,9 @@ export class CreateApplicationComponent implements OnInit, OnDestroy {
     if (application && this.applicationForm.valid) {
       if (this.mode === 'CREATE') {
         // Pass the newly created Application -> API call
-        const createSubscription = this.service.createApplication(application).subscribe(
+        this.service.createApplication(application)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(
           (res) => {
             this.openSnackBar("Created Succcessfully", "OK");
             this.applicationForm.reset();
@@ -148,19 +148,19 @@ export class CreateApplicationComponent implements OnInit, OnDestroy {
           },
           (e) => {
             console.error(e.error);
-            this.openSnackBar(e.error, "OK");
+            this.openSnackBar(e.error?.title, "OK");  // TODO: broke the duplicate application NUmbers!@
           }
         );
-        this.subscriptions.push(createSubscription);
       } else if (this.mode === 'EDIT') {
         // Update the application using the API call
         const updatedApplication = { ...this.currentApplication, ...application };
-        const updateSubscription = this.service.updateApplication(updatedApplication).subscribe(res => {
+        this.service.updateApplication(updatedApplication)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(res => {
           this.openSnackBar('Saved Successfully', 'OK');
           this.applicationForm.reset();
           this.router.navigate(['/applications']);
         });
-        this.subscriptions.push(updateSubscription);
       } else {
           // There was an error revertback
           this.router.navigate(['/']);
@@ -244,5 +244,10 @@ export class CreateApplicationComponent implements OnInit, OnDestroy {
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, { duration: 3000 });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

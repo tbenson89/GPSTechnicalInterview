@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using GPS.ApplicationManager.Web.Models;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace GPS.ApplicationManager.Web.Controllers
 {
@@ -38,7 +39,38 @@ namespace GPS.ApplicationManager.Web.Controllers
                 _logger.LogError(ex, "An error occurred while loading applications.");
                 return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while loading applications.");
             }
+        }
 
+        // TODO: GEt this working!
+        /// <summary>
+        ///     GET: Search through application data to find application '/api/applications'
+        /// </summary>
+        /// <returns>All the Applications in the JSON File/mockDB</returns>
+        [HttpGet]
+        [Route("application/find")]
+        public ActionResult<IEnumerable<LoanApplication>> SearchAllApplications(string searchInput)
+        {
+            var results = new List<LoanApplication>();
+            try
+            {
+                var applications = LoanApplicationHelper.LoadApplications().ToList();
+
+                results.AddRange(applications.Where(a => a.ApplicationNumber.ToString().Contains(searchInput ?? "")
+                    || a.ApplicationNumber.ToString().Contains(searchInput ?? "")
+                    || (bool)(a.ApplicationNumber.ToString().Contains(searchInput ?? ""))));
+
+                //results.AddRange(applications.Where(a => a.ApplicationNumber.ToString().Contains(searchInput ?? "") && !results.Contains(a)));
+                //results.AddRange(applications.Where(a => a.PersonalInfo.FullName.ToString().Contains(searchInput ?? "") && !results.Contains(a)));
+                //results.AddRange(applications.Where(a => (bool)(a.PersonalInfo.Email?.ToString().Contains(searchInput ?? "")) && !results.Contains(a)));
+
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it as needed
+                _logger.LogError(ex, "An error occurred while searching applications.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "An error occurred while searching applications.");
+            }
         }
 
         /// <summary>

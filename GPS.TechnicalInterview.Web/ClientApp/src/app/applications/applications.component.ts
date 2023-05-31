@@ -5,7 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { UserModalComponent } from '../components/user-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
+import { catchError, finalize, switchMap, takeUntil } from "rxjs/operators";
 
 @Component({
   selector: 'app-applications',
@@ -13,7 +14,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./applications.component.scss']
 })
 export class ApplicationsComponent implements OnInit, OnDestroy {
-  private subscriptions: Subscription[] = [];
+  private unsubscribe$ = new Subject<void>();
   public displayedColumns: Array<string> = [
     "applicationNumber",
     "amount",
@@ -21,7 +22,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
     "status",
     "options",
   ];
-  public applications: LoanApplication[] = [];
+  applications$: Observable<LoanApplication[]> | undefined;
 
   constructor(
     private service: ApiService,
@@ -34,20 +35,18 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
     this.displayApplications();
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.forEach(subscription => subscription.unsubscribe());
+  displayApplications():Observable<LoanApplication[]> {
+    return this.applications$ = this.service.getAllApplications()
+    .pipe(catchError((error) => {
+        console.error("Error while fetching applications:", error);
+        this.openSnackBar("Error loading applications. Please come back later", "OK");
+        return of([]);
+      })
+    );
   }
 
-  displayApplications() {
-    const subscription = this.service.getAllApplications().subscribe((data: LoanApplication[]) => {
-      this.applications = data;
-    });
-    this.subscriptions.push(subscription);
-
-    // Note: IF I had more time: I would utilize async/await, promises, and error handling using catch().
-    // This would ensure smoother handling of the API call and potential errors.
-    // I would also utilize the async | pipe and $streams - to avoid memory leaks
-    // Eliminates the need to manually unsubscribe in the ngOnDestroy lifecycle hook
+  searchApplications(input: any) {
+    // TODO: lost the search application logic :(
   }
 
   editClick(application: LoanApplication) {
@@ -61,20 +60,41 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
       data: { appNum },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        const subscription = this.service
-          .deleteApplication(appNum)
-          .subscribe((data: LoanApplication[]) => {
-            this.openSnackBar("Application Deleted.", "OK");
-            this.applications = data;
-        });
-        this.subscriptions.push(subscription);
-      }
-    });
+    dialogRef.afterClosed()
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        switchMap((result) => {
+          if (result) {
+            return this.service.deleteApplication(appNum).pipe(
+              catchError((error) => {
+                console.error(`There was an error deleting application number:${appNum}`, error);
+                this.openSnackBar(`There was an error deleting application number:${appNum}`, "OK");
+                return of(null);
+              }),
+              finalize(() => {
+                this.openSnackBar("Application Deleted.", "OK");
+              })
+            );
+          } else {
+            return of(null);
+          }
+        })
+      )
+      .subscribe(() => {
+        this.displayApplications();
+      },
+        (error) => {
+          console.error(`Error occurred: ${error}`);
+        }
+      );
   }
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, { duration: 3000 });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

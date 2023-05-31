@@ -71,7 +71,17 @@
           <div class="input-wrap">
             <mat-form-field appearance="outline" class="input-wrap__input">
               <mat-label>Amount</mat-label>
-              <input matInput formControlName="amount" placeholder="Amount *" (input)="updateMonthlyPaymentAmount()">
+              <input
+                matInput formControlName="amount" [value]="applicationForm.get('loanTerms.amount').value"
+                placeholder="Amount *" (input)="updateMonthlyPaymentAmount()"
+              >
+              <!-- TODO: get or remove currency format hmmm -->
+              <!-- [value]="applicationForm.get('loanTerms.amount').value | currency: 'USD':'symbol':'1.2-2'" -->
+              <!-- <input
+                matInput formControlName="amount" [value]="applicationForm.value.loanTerms.amount"
+                placeholder="Amount *" (input)="updateMonthlyPaymentAmount()"
+                currencyMask [options]="{ prefix: '$ ', thousands: ',', decimal: '.' }"
+              > -->
             </mat-form-field>
             <div class="error-message" *ngIf="isFieldInvalid('loanTerms.amount')">
               <em>{{ getErrorMessage('loanTerms.amount') }}</em>

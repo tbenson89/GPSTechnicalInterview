@@ -1,6 +1,6 @@
-# Loan Application Web Test (Angular)
+# Loan Application Practice (Angular)
 
-Welcome to the Loan Application Web Test (Angular) repository! This repository contains the client-side Angular application for loan applications. It is designed to provide a seamless and user-friendly experience for applicants.
+Welcome to the Loan Application Practice (Angular) repository! This repository contains the client-side Angular application for loan applications. It is designed to provide a seamless and user-friendly experience for applicants.
 
 ## Build
 
